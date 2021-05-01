@@ -1,0 +1,49 @@
+call plug#begin('~/.vim/plugged')
+
+Plug 'morhetz/gruvbox'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-utils/vim-man'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-commentary'
+Plug 'ycm-core/YouCompleteMe'
+Plug 'preservim/nerdtree'
+
+call plug#end()
+
+set t_Co=256
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+colorscheme gruvbox
+set background=dark
+
+let g:airline_theme="gruvbox" 
+" let g:airline_powerline_fonts = 0
+
+autocmd FileType python,shell set commentstring=#\ %s
+autocmd FileType java,scala set commentstring=//\ %s
+
+syntax on
+
+set noerrorbells
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set nu rnu 
+set nuw=1
+set nowrap
+set smartcase
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+set incsearch
+
+set colorcolumn=80
+highlight ColorColumn ctermbg=0 guibg=lightgrey
+
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
