@@ -72,45 +72,45 @@
 
    在列转行完成后，我们需要做的是再进行一次行转列，把需要的列转出来。我们需要的列是5列（id + score3、4、5对应的disease_code列 + score6、7、8对应的treatment_time列 + score9、10、11对应的hospital_code列 + score12、13、14对应的bill_amount列）。但这边存在一个问题，如果我们直接rename所有score列直接转的话，我们无法区分哪个disease_code对应哪个treatment_time了，因为这些字段其实是一一对应的。这边我们可以用一个小技巧来解决，添加一列symbol_for_disease，如果symbol_for_disease相同，那就表示一个即往症。
 
-   3. ###### 行转列
+3. ###### 行转列
 
-      代码：
+   代码：
 
-      ```scala
-      val df2 = df1
-      .withColumn(
-        "symbol_for_disease",
-        when('score.isin(Seq("score_3", "score_6", "score_9", "score_12"): _*), 1)
-      	.when('score.isin(Seq("score_4", "score_7", "score_10", "score_13"): _*), 2)
-      	.when('score.isin(Seq("score_5", "score_8", "score_11", "score_14"): _*), 3)
-      )
-        .where('symbol_for_disease.isNotNull)
-        .na
-        .replace(
-      	"score",
-      	Map(
-      	  "score_3" -> "disease_code",
-      	  "score_4" -> "disease_code",
-      	  "score_5" -> "disease_code",
-      	  "score_6" -> "treatment_time",
-      	  "score_7" -> "treatment_time",
-      	  "score_8" -> "treatment_time",
-      	  "score_9" -> "hospital_code",
-      	  "score_10" -> "hospital_code",
-      	  "score_11" -> "hospital_code",
-      	  "score_12" -> "bill_amount",
-      	  "score_13" -> "bill_amount",
-      	  "score_14" -> "bill_amount"
-      	)
-        )
-        .groupBy('id, 'symbol_for_disease)
-        .pivot("score")
-        .agg(
-      	first('value)
-        )
-        .drop("symbol_for_disease")
-      ```
+   ```scala
+   val df2 = df1
+   .withColumn(
+     "symbol_for_disease",
+     when('score.isin(Seq("score_3", "score_6", "score_9", "score_12"): _*), 1)
+   	.when('score.isin(Seq("score_4", "score_7", "score_10", "score_13"): _*), 2)
+   	.when('score.isin(Seq("score_5", "score_8", "score_11", "score_14"): _*), 3)
+   )
+     .where('symbol_for_disease.isNotNull)
+     .na
+     .replace(
+   	"score",
+   	Map(
+   	  "score_3" -> "disease_code",
+   	  "score_4" -> "disease_code",
+   	  "score_5" -> "disease_code",
+   	  "score_6" -> "treatment_time",
+   	  "score_7" -> "treatment_time",
+   	  "score_8" -> "treatment_time",
+   	  "score_9" -> "hospital_code",
+   	  "score_10" -> "hospital_code",
+   	  "score_11" -> "hospital_code",
+   	  "score_12" -> "bill_amount",
+   	  "score_13" -> "bill_amount",
+   	  "score_14" -> "bill_amount"
+   	)
+     )
+     .groupBy('id, 'symbol_for_disease)
+     .pivot("score")
+     .agg(
+   	first('value)
+     )
+     .drop("symbol_for_disease")
+   ```
 
-      运行结果：
+   运行结果：
 
-      ![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/df2.png)
+   ![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/df2.png)
