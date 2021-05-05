@@ -8,17 +8,17 @@
 
 ###### 原始json大概长这样：
 
-![image-20210501213013540](C:\Users\jiandong.chen\AppData\Roaming\Typora\typora-user-images\image-20210501213013540.png)
+![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/json.jpg)
 
 ###### 产品的需求为：
 
-![requirement](D:\notes\summary\spark\images\requirement.png)
+![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/requirement.png)
 
 ## 解决过程
 
 1. ###### 首先对json进行拆解，对其一维化，结果如下，部分字段进行了省略
 
-![select-result](D:\notes\summary\spark\images\select-result.png)
+![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/select-result.png)
 
 这个过程十分简单，但需要注意的是目前的维度为一次请求，而我们想要的结果集的维度为一条既往症。目前的一条记录其实包含了潜在的三条记录，那很自然的想到，我们需要列转行。
 
@@ -68,7 +68,7 @@
 
    
 
-   ![df1](D:\notes\summary\spark\images\df1.png)
+   ![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/df1.png)
 
    在列转行完成后，我们需要做的是再进行一次行转列，把需要的列转出来。我们需要的列是5列（id + score3、4、5对应的disease_code列 + score6、7、8对应的treatment_time列 + score9、10、11对应的hospital_code列 + score12、13、14对应的bill_amount列）。但这边存在一个问题，如果我们直接rename所有score列直接转的话，我们无法区分哪个disease_code对应哪个treatment_time了，因为这些字段其实是一一对应的。这边我们可以用一个小技巧来解决，添加一列symbol_for_disease，如果symbol_for_disease相同，那就表示一个即往症。
 
@@ -113,4 +113,4 @@
 
       运行结果：
 
-      ![df2](D:\notes\summary\spark\images\df2.png)
+      ![image](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/df2.png)
