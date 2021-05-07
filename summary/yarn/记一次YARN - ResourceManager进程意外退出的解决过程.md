@@ -46,7 +46,7 @@
 
       中的一个**java.util.concurrent.ConcurrentHashMap**占据了绝大部分的内存
 
-      ![hashmapEntry](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.jpg)
+      ![hashmapEntry](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/hashmapEntry.jpg)
 
       观察这个hashmap，可以看到其中的node对象为10001（截图为将yarn.resourcemanager.max-completed-applications参数的默认值10000修改为2000后的，所以截图为2001）个。
 
@@ -54,7 +54,7 @@
 
    5. 查看该类的源码
 
-      ![RMActiveServiceContext](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.png)
+      ![RMActiveServiceContext](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/RMActiveServiceContext.png)
 
       有一个hashmap吸引了我的注意，applications，key为appid，而value是app对象。难道yarn将application的信息存储在内存中？
 
@@ -64,7 +64,7 @@
 
       查看yarn-applications界面：
 
-      ![yarn-applications](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.png)
+      ![yarn-applications](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/yarn-applications.png)
 
       可以看到entries值为10001（此为修改后的截图，所以为2001）
 
@@ -78,11 +78,11 @@
 
 第一次我们将RM的内存大小修改为2GB，修改完成后，发现oom果然不再发生，但RM的gc时间却在不断增加，并且很奇怪的一点是full gc次数远大于young gc次数，并且几乎是一直在full gc，很明显还是有问题，但老年代内存只是使用到了89%，并没有用满。
 
-![resourcemanager-gc](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/resourcemanager-gc.png)
+![resourcemanager-gc](C:\Users\jiandong.chen\Desktop\resourcemanager-gc.png)
 
 查看RM启动参数
 
-![rm启动参数](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm启动参数.jpg)
+![rm启动参数](C:\Users\jiandong.chen\Desktop\rm启动参数.jpg)
 
 发现RM的jvm启动参数有-XX:+UseConcMarkSweepGC，通过查阅资料得知这个参数表示对于老年代的回收采用CMS。CMS采用的基础算法是：标记—清除，而-XX:CMSInitiatingOccupancyFraction=70这个参数表示设定CMS在对内存占用率达到70%的时候开始GC。
 
@@ -96,5 +96,5 @@
 
 经过一段时间的观察，RM内存使用情况平稳，问题得到解决。
 
-![rm内存情况-新](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm内存情况-新.jpg)
+![rm内存情况-新](C:\Users\jiandong.chen\Desktop\rm内存情况-新.jpg)
 
