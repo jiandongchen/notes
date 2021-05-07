@@ -26,11 +26,11 @@
 
 图1：
 
-![coalesce(1)](C:\Users\jiandong.chen\Desktop\coalesce(1).jpg)
+![coalesce(1)](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/coalesce(1).jpg)
 
 图2：
 
-![repartition(1)](C:\Users\jiandong.chen\Desktop\repartition(1).jpg)
+![repartition(1)](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/repartition(1).jpg)
 
 运行同一个spark app两次，唯一的区别是在最后一步持久化tohive以前，图1使用了coalesce(1)来将分区合并，而图2使用了repartition。奇怪的问题出现了，抛开效率不谈，使用coalesce的情况下，任务甚至都失败了，而repartition可以顺利执行。那么问题点究竟出在了哪里呢？
 
@@ -42,11 +42,11 @@
 
    图1：
 
-   ![coalesce(1)-dag](C:\Users\jiandong.chen\Desktop\coalesce(1)-dag.jpg)
+   ![coalesce(1)-dag](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/coalesce(1)-dag.jpg)
 
    图2：
 
-   ![repartition(1)-dag](C:\Users\jiandong.chen\Desktop\repartition(1)-dag.png)
+   ![repartition(1)-dag](https://github.com/jiandongchen/notes/blob/main/summary/spark/images/repartition(1)-dag.png)
 
    观察两者的dag图可以很明显的看出，reparation(1)在快结束时有一步exchange操作，而coalesce没有。那么可以推断出多的那个stage就是exchange了。
 
