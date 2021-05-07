@@ -98,3 +98,4 @@
 
 ![rm内存情况-新](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm内存情况-新.jpg)
 
+![rm-gc-new](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm-gc-new.png)
