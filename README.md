@@ -1,5 +1,11 @@
 # notes
 Taking notes at work.
 
-# spark
-https://github.com/jiandongchen/notes/blob/main/summary/spark/stack%26pivot%E5%87%BD%E6%95%B0%E4%BD%BF%E7%94%A8%E6%97%A5%E8%AE%B0.md
+## spark
+
+1. stack&pivot函数使用日记 - [notes](https://github.com/jiandongchen/notes)/[summary](https://github.com/jiandongchen/notes/tree/main/summary)/[spark](https://github.com/jiandongchen/notes/tree/main/summary/spark)/**stack&pivot函数使用日记.md**
+2. 详细记录一次数仓主调度调优的过程 - [notes](https://github.com/jiandongchen/notes)/[summary](https://github.com/jiandongchen/notes/tree/main/summary)/[spark](https://github.com/jiandongchen/notes/tree/main/summary/spark)/**详细记录一次数仓主调度调优的过程.md**
+
+## yarn
+
+1. 记一次YARN - ResourceManager进程意外退出的解决过程 - [notes](https://github.com/jiandongchen/notes)/[summary](https://github.com/jiandongchen/notes/tree/main/summary)/[yarn](https://github.com/jiandongchen/notes/tree/main/summary/yarn)/**记一次YARN - ResourceManager进程意外退出的解决过程.md**
