@@ -8,17 +8,17 @@
 
 1. 查看cm的警报日志，发现进程退出原因为oom
 
-   ![cm警报日志](C:\Users\jiandong.chen\Desktop\cm警报日志.jpg)
+   ![cm警报日志](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/cm警报日志.jpg)
 
 2. RM发生oom是比较奇怪的，因为理论上它不像是Hadoop的NameNode，需要在内存中保存一份完整的元数据，内存不应该有过大的压力。确定了是oom之后，自然我就去查看了RM堆栈的运行历史和gc情况
 
    RM堆栈：
 
-   ![rm堆栈历史](C:\Users\jiandong.chen\Desktop\rm堆栈历史.png)
+   ![rm堆栈历史](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm堆栈历史.png)
 
    gc：
 
-   ![gc历史](C:\Users\jiandong.chen\Desktop\gc历史.png)
+   ![gc历史](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/gc历史.png)
 
    看到这里oom的结论已经很清楚了，从图上能很明显的看出，随着时间推移堆内存不断在变大，而gc时间也在不断增加，直到达到内存设置上限（默认为1GB）发生oom进程退出。
 
@@ -32,7 +32,7 @@
 
    2. 输入jps命令
 
-      ![jps](C:\Users\jiandong.chen\Desktop\jps.jpg)
+      ![jps](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/jps.jpg)
 
       可以看到RM的PID为16371
 
@@ -40,13 +40,13 @@
 
    4. 使用MemoryAnalyzer打开该文件
 
-      ![mat1](C:\Users\jiandong.chen\Desktop\mat1.jpg)
+      ![mat1](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/mat1.jpg)
 
       可以观察到有一个实例**org.apache.hadoop.yarn.server.resourcemanager.RMActiveServiceContext**
 
       中的一个**java.util.concurrent.ConcurrentHashMap**占据了绝大部分的内存
 
-      ![hashmapEntry](C:\Users\jiandong.chen\Desktop\hashmapEntry.jpg)
+      ![hashmapEntry](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.jpg)
 
       观察这个hashmap，可以看到其中的node对象为10001（截图为将yarn.resourcemanager.max-completed-applications参数的默认值10000修改为2000后的，所以截图为2001）个。
 
@@ -54,7 +54,7 @@
 
    5. 查看该类的源码
 
-      ![RMActiveServiceContext](C:\Users\jiandong.chen\Desktop\RMActiveServiceContext.png)
+      ![RMActiveServiceContext](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.png)
 
       有一个hashmap吸引了我的注意，applications，key为appid，而value是app对象。难道yarn将application的信息存储在内存中？
 
@@ -64,7 +64,7 @@
 
       查看yarn-applications界面：
 
-      ![yarn-applications](C:\Users\jiandong.chen\Desktop\yarn-applications.png)
+      ![yarn-applications](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/.png)
 
       可以看到entries值为10001（此为修改后的截图，所以为2001）
 
@@ -78,11 +78,11 @@
 
 第一次我们将RM的内存大小修改为2GB，修改完成后，发现oom果然不再发生，但RM的gc时间却在不断增加，并且很奇怪的一点是full gc次数远大于young gc次数，并且几乎是一直在full gc，很明显还是有问题，但老年代内存只是使用到了89%，并没有用满。
 
-![resourcemanager-gc](C:\Users\jiandong.chen\Desktop\resourcemanager-gc.png)
+![resourcemanager-gc](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/resourcemanager-gc.png)
 
 查看RM启动参数
 
-![rm启动参数](C:\Users\jiandong.chen\Desktop\rm启动参数.jpg)
+![rm启动参数](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm启动参数.jpg)
 
 发现RM的jvm启动参数有-XX:+UseConcMarkSweepGC，通过查阅资料得知这个参数表示对于老年代的回收采用CMS。CMS采用的基础算法是：标记—清除，而-XX:CMSInitiatingOccupancyFraction=70这个参数表示设定CMS在对内存占用率达到70%的时候开始GC。
 
@@ -96,5 +96,5 @@
 
 经过一段时间的观察，RM内存使用情况平稳，问题得到解决。
 
-![rm内存情况-新](C:\Users\jiandong.chen\Desktop\rm内存情况-新.jpg)
+![rm内存情况-新](https://github.com/jiandongchen/notes/blob/main/summary/yarn/images/rm内存情况-新.jpg)
 
