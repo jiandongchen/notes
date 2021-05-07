@@ -1,0 +1,17 @@
+number of core instances: 9
+virtual cores total: 7
+RAM total: 63g
+spark.executors.cores = 5 (vCPU)
+
+Number of executors per instance = (7 - 1)/ 5 = 6 / 5 = 1 (rounded down)
+Total executor memory = 63 / 1 = 63 (rounded down)
+spark.executors.memory = 63 * 0.9 = 56 (rounded down)
+spark.yarn.executor.memoryOverhead = 63 * 0.1 = 7 (rounded up)
+
+
+spark.driver.memory = spark.executors.memory
+spark.driver.cores= spark.executors.cores
+spark.executor.instances = (1*9) -1 = 8
+
+spark.default.parallelism = 8 * 5 * 2 = 80
+
