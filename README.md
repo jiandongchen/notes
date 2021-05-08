@@ -1,5 +1,5 @@
 # notes
-Taking notes at work.
+Taking notes at work
 
 ## spark
 
